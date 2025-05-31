@@ -153,7 +153,7 @@ INFO is a plist used as a communication channel."
     (let ((max-width (max 3 (org-gfm-table-col-width table col info))))
       (when (< max-width 1)
         (setq max-width 1))
-      (make-string max-width char))))
+      (concat " " (make-string max-width char)))))
 
 ;;;; Table-Cell
 
