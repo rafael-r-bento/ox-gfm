@@ -30,7 +30,7 @@ add this snippet to your Emacs configuration:
 
 ## Differences from upstream
 
-- Captions exported as H4
+- Captions in tables and source blocks exported as H4 heading
 - Verse blocks exported as fenced code blocks
 - In table hline, prefix rule with a space character
   (merge [PR 53](https://github.com/larstvei/ox-gfm/pull/53) made to upstream)
