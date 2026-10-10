@@ -1,6 +1,7 @@
 ;;; ox-gfm.el --- Github Flavored Markdown Back-End for Org Export Engine -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2014-2017 Lars Tveito
+;; Copyright (C) 2026 Rafael Bento
 
 ;; Author: Lars Tveito
 ;; Keywords: org, wp, markdown, github
@@ -59,6 +60,7 @@
                      (strike-through . org-gfm-strike-through)
                      (example-block . org-gfm-example-block)
                      (src-block . org-gfm-src-block)
+                     (verse-block . org-gfm-verse-block)
                      (table-cell . org-gfm-table-cell)
                      (table-row . org-gfm-table-row)
                      (table . org-gfm-table)))
@@ -90,11 +92,22 @@ channel."
          (code (org-export-format-code-default src-block info))
          (prefix (concat "```" lang "\n"))
          (suffix "```"))
-    (concat prefix code suffix)))
+    (concat (org-gfm-caption src-block info)
+            prefix code suffix)))
 
 ;;;; Example Block
 
 (defalias 'org-gfm-example-block #'org-gfm-src-block)
+
+;;;; Verse Block
+
+(defun org-gfm-verse-block (verse-block contents info)
+  "Transcode VERSE-BLOCK into a fenced code block.
+CONTENTS is the verse block contents. INFO is a ĺist used
+as a communication channel."
+  (concat "```\n"
+          (or contents "")
+          "```"))
 
 ;;;; Strike-Through
 
@@ -103,6 +116,16 @@ channel."
 CONTENTS is the text with strike-through markup.  _INFO is a plist
 holding contextual information."
   (format "~~%s~~" contents))
+
+;;;; Captions
+
+(defun org-gfm-caption (element info)
+  "Return ELEMENT's caption as a level-four Markdown heading."
+  (let ((caption (org-export-get-caption element)))
+    (when caption
+      (concat "#### "
+              (org-export-data caption info)
+              "\n"))))
 
 ;;;; Table-Common
 
@@ -219,7 +242,8 @@ contextual information."
                                  columns
                                  gfm-table-separator)
                       gfm-table-right-border "\n")))))
-    (concat (and no-header (funcall build-dummy-header))
+    (concat (org-gfm-caption table info)
+            (and no-header (funcall build-dummy-header))
             (replace-regexp-in-string "\n\n" "\n" contents))))
 
 ;;;; Table of contents

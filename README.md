@@ -27,3 +27,10 @@ add this snippet to your Emacs configuration:
 (eval-after-load "org"
   '(require 'ox-gfm nil t))
 ```
+
+## Differences from upstream
+
+- Captions exported as H4
+- Verse blocks exported as fenced code blocks
+- In table hline, prefix rule with a space character
+  (merge [PR 53](https://github.com/larstvei/ox-gfm/pull/53) made to upstream)
